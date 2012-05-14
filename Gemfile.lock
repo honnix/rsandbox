@@ -1,0 +1,14 @@
+GEM
+  remote: http://ruby.taobao.org/
+  specs:
+    i18n (0.6.0)
+    json (1.7.3)
+    money (5.0.0)
+      i18n (~> 0.4)
+      json
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  money
