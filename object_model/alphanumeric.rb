@@ -67,3 +67,18 @@ obj.testing_self
 
 p self
 p self.class
+
+class C
+  def public_method
+    private_method
+    self.private_method
+  end
+
+  private
+
+  def private_method
+    puts "hello"
+  end
+end
+
+C.new.public_method
