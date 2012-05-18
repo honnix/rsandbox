@@ -3,7 +3,7 @@ require 'test/unit'
 def add_checked_attribute(clazz, attribute)
   clazz.class_eval do
     define_method "#{attribute}=" do |value|
-      raise 'Invalid attribute' unless value
+      raise 'Invalid attribute' unless value and yield(value)
       instance_variable_set("@#{attribute}", value)
     end
 
@@ -19,7 +19,7 @@ end
 
 class TestCheckedAttribute < Test::Unit::TestCase
   def setup
-    add_checked_attribute(Person, :age)
+    add_checked_attribute(Person, :age) { |v| v >= 18 }
     @bob = Person.new
   end
 
@@ -37,6 +37,12 @@ class TestCheckedAttribute < Test::Unit::TestCase
   def test_refuses_false_values
     assert_raises RuntimeError, 'Invalid attribute' do
       @bob.age = false
+    end
+  end
+
+  def test_refuses_invalid_values
+    assert_raises RuntimeError, 'Invalid attribute' do
+      @bob.age = 17
     end
   end
 end
