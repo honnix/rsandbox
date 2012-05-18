@@ -1,20 +1,16 @@
 require 'test/unit'
 
 def add_checked_attribute(clazz, attribute)
-  code = <<END
-class #{clazz}
-  def #{attribute}=(value)
-    raise 'Invalid attribute' unless value
-    @#{attribute} = value
-  end
+  clazz.class_eval do
+    define_method "#{attribute}=" do |value|
+      raise 'Invalid attribute' unless value
+      instance_variable_set("@#{attribute}", value)
+    end
 
-  def #{attribute}()
-    @#{attribute}
+    define_method "#{attribute}" do
+      instance_variable_get "@#{attribute}"
+    end
   end
-end
-END
-
-  eval code
 end
 
 class Person
