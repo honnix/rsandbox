@@ -1,25 +1,26 @@
 require 'test/unit'
 
-def add_checked_attribute(clazz, attribute)
-  clazz.class_eval do
+class Class
+  def attr_checked(attribute)
     define_method "#{attribute}=" do |value|
-      raise 'Invalid attribute' unless value and yield(value)
+      raise 'Invalid attribute' unless yield(value)
       instance_variable_set("@#{attribute}", value)
     end
 
     define_method "#{attribute}" do
       instance_variable_get "@#{attribute}"
     end
-  end
+  end  
 end
 
 class Person
-  
+  attr_checked :age do |v|
+    v and v >= 18
+  end
 end
 
 class TestCheckedAttribute < Test::Unit::TestCase
   def setup
-    add_checked_attribute(Person, :age) { |v| v >= 18 }
     @bob = Person.new
   end
 
